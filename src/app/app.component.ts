@@ -58,7 +58,7 @@ export class AppComponent {
       .then(({ data }) => {
 
         if (data && data.deleteGreeting)
-          this._matSnackBar.open('Greeting deleted.', 'CLOSE', { duration: 4000 });
+          this._matSnackBar.open('Greeting created.', 'CLOSE', { duration: 4000 });
         else
           this._matSnackBar.open('An error occurred', 'CLOSE', { duration: 4000, });
       })
