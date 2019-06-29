@@ -1,3 +1,4 @@
+import { AppUtils } from './blocks/utils/index';
 import { IGreeting } from './blocks/interfaces/IGreeting';
 import { GreetingsService } from './blocks/services/greetings.service';
 import { Component } from '@angular/core';
@@ -25,13 +26,20 @@ export class AppComponent {
   ngOnInit(): void {
 
     this.loadGreetings()
+
+    console.log(
+
+
+    )
   }
 
   addGreeting() {
 
     let msg = this.message.value
+    let id = AppUtils.GenerateObjectId();
+
     this._greetingsService
-      .createGreeting(msg)
+      .createGreeting(id, msg)
       .then(({ data }) => {
 
         if (data && data.addGreeting) {
@@ -63,4 +71,5 @@ export class AppComponent {
           this._matSnackBar.open('An error occurred', 'CLOSE', { duration: 4000, });
       })
   }
+
 }

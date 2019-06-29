@@ -4,6 +4,7 @@ const { VoyagerServer, gql } = require('@aerogear/voyager-server')
 const metrics = require('@aerogear/voyager-metrics')
 const auditLogger = require('@aerogear/voyager-audit')
 const { conflictHandler } = require('@aerogear/voyager-conflicts')
+const { GenerateObjectId } = require('./utils')
 
 const { PubSub } = require('graphql-subscriptions')
 const pubsub = new PubSub()
@@ -13,7 +14,7 @@ const TOPIC = 'TOPIC'
 const typeDefs = gql`
 
   type Greeting {
-    id : Int
+    id : String
     msg: String
     ## Can be used to track conflicts
     version: Int
@@ -25,14 +26,14 @@ const typeDefs = gql`
 
   type Query {
 
-    greeting(id: Int!): Greeting
+    greeting(id: String!): Greeting
     greetings: [Greeting]
   }
 
   type Mutation {
 
-    addGreeting(msg: String!): Greeting
-    deleteGreeting(id: Int!): Int
+    addGreeting(id: String!, msg: String!): Greeting
+    deleteGreeting(id: String!): Greeting
     ## Server resolution policy
     changeGreeting(msg: String!, version: Int!): Greeting
     ## Client resolution policy
@@ -41,19 +42,19 @@ const typeDefs = gql`
 `
 // In Memory Data Source
 let greeting = {
-  id: 3,
+  id: "5d17a6d25a009f3412488222",
   msg: 'greeting from Voyager Server',
   version: 1
 }
 
 let greetings = [
   {
-    id: 1,
+    id: "5d17a6d25a009f3412488207",
     msg: 'Greeting from Voyager Server',
     version: 1
   },
   {
-    id: 2,
+    id: "5d17a6d25a009f3412488421",
     msg: 'Greeting from Offix',
     version: 1
   }
@@ -95,10 +96,11 @@ const resolvers = {
       greeting = conflictHandler.nextState(args)
       return greeting
     },
-    addGreeting: async (obj, { msg }, context, info) => {
-
+    addGreeting: async (obj, { msg, id }, context, info) => {
+      console.log(msg, id)
       let greeting = {
-        id: greetings.length ? Math.max.apply(Math, greetings.map(function (o) { return o.id; })) + 1 : 1,
+        // id: greetings.length ? Math.max.apply(Math, greetings.map(function (o) { return o.id; })) + 1 : 1,
+        id: id ? id : GenerateObjectId(),
         msg: msg,
         version: 1
       }
@@ -112,8 +114,9 @@ const resolvers = {
       let index = greetings.findIndex(obj => obj.id === id)
 
       if (index > -1) {
+        let greeting = greetings[index]
         greetings.splice(index, 1)
-        return id
+        return greeting
       }
       else
         return null
@@ -125,6 +128,7 @@ const resolvers = {
       return greetings.find(obj => obj.id == id)
     },
     greetings: (obj, args, context, info) => {
+
       // pubsub.publish(TOPIC, { greetings: greetings[0] })
 
       return greetings

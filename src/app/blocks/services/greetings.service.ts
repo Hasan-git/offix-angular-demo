@@ -24,11 +24,13 @@ export class GreetingsService {
     })
   }
 
-  createGreeting(message) {
+  createGreeting(id, message) {
     return this.apollo.offlineMutation<IGreeting>({
       mutation: ADD_GREETING,
       variables: {
-        msg: message
+        id,
+        msg: message,
+        version: 1
       },
       updateQuery: GREETINGS_QUERY,
       typeName: 'Greeting'
