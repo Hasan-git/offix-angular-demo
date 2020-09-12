@@ -35,7 +35,7 @@
     "apollo-utilities": "^1.2.1",
     "ava": "^1.0.1",
     "graphql-tag": "^2.10.1",
-    "node-fetch": "^2.5.0",
+    "node-fetch": "^2.6.1",
     "subscriptions-transport-ws": "^0.9.16",
     "ws": "^7.0.0"
   }
