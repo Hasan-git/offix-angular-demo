@@ -20,7 +20,7 @@
     "@aerogear/voyager-tools": "^0.5.1",
     "@aerogear/voyager-subscriptions": "^0.6.1-dev-1",
     "graphql-subscriptions": "1.1.0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "express": "^4.16.4",
     "graphql": "0.13.2",
     "graphql-tools": "^4.0.3"
